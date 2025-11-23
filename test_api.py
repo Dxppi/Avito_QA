@@ -37,7 +37,7 @@ def test_create_item_missing_name():
     payload = {
         "sellerID": USERID,
         "price": 1000,
-        "statistics": {"likes": 1, "viewCount": 1, "contacts": 1}
+        "statistics": {"likes": 1, "viewCount": 1, "contacts": 1},
     }
     response = make_request("POST", "/api/1/item", json=payload)
     assert response.status_code == 400
@@ -61,7 +61,7 @@ def test_create_item_string_price():
         "sellerID": USERID,
         "name": "Test Item",
         "price": "not_a_number",
-        "statistics": {"likes": 1, "viewCount": 1, "contacts": 1}
+        "statistics": {"likes": 1, "viewCount": 1, "contacts": 1},
     }
     response = make_request("POST", "/api/1/item", json=payload)
     assert response.status_code == 400
@@ -76,8 +76,8 @@ def test_create_item_max_values():
         "statistics": {
             "likes": 2147483647,
             "viewCount": 2147483647,
-            "contacts": 2147483647
-        }
+            "contacts": 2147483647,
+        },
     }
     response = make_request("POST", "/api/1/item", json=payload)
     assert response.status_code in [200, 400]
@@ -85,7 +85,9 @@ def test_create_item_max_values():
 
 def test_create_item_with_negative_values():
     """TC-C-006: Создание с отрицательными значениями"""
-    item = create_item("Negative Test", -100, {"likes": -10, "viewCount": -5, "contacts": -1})
+    item = create_item(
+        "Negative Test", -100, {"likes": -10, "viewCount": -5, "contacts": -1}
+    )
     assert item is not None
     response = get_item(item["id"])
     assert response.status_code == 200
@@ -159,7 +161,9 @@ def test_statistics_endpoints(test_item):
 
 def test_get_item_statistic_values_match():
     """TC-S-001: Проверка совпадения значений статистики"""
-    item = create_item("Stat Values Test", 1500, {"likes": 7, "viewCount": 12, "contacts": 3})
+    item = create_item(
+        "Stat Values Test", 1500, {"likes": 7, "viewCount": 12, "contacts": 3}
+    )
     assert item is not None
     response = get_item_statistic(item["id"])
     assert response.status_code == 200
@@ -188,17 +192,21 @@ def test_delete_nonexistent_item():
 
 def test_delete_already_deleted_item():
     """TC-D-003: Повторное удаление уже удаленного объявления"""
-    item = create_item("Test Delete Twice", 1000, {"likes": 1, "viewCount": 1, "contacts": 1})
+    item = create_item(
+        "Test Delete Twice", 1000, {"likes": 1, "viewCount": 1, "contacts": 1}
+    )
     assert item is not None
     response1 = delete_item(item["id"])
-    assert response1 == True
+    assert response1
     response2 = delete_item(item["id"])
-    assert response2 == False
+    assert not response2
 
 
 def test_compare_statistics_v1_v2():
     """TC-SV-001: Сравнение статистики v1 и v2"""
-    item = create_item("Compare Stats", 1000, {"likes": 5, "viewCount": 10, "contacts": 3})
+    item = create_item(
+        "Compare Stats", 1000, {"likes": 5, "viewCount": 10, "contacts": 3}
+    )
     assert item is not None
     response_v1 = get_item_statistic(item["id"])
     response_v2 = get_item_statistic_v2(item["id"])
@@ -212,7 +220,9 @@ def test_compare_statistics_v1_v2():
 
 def test_integration_full_lifecycle():
     """TC-I-001: Полный жизненный цикл объявления"""
-    item = create_item("Integration Test", 2500, {"likes": 8, "viewCount": 15, "contacts": 4})
+    item = create_item(
+        "Integration Test", 2500, {"likes": 8, "viewCount": 15, "contacts": 4}
+    )
     assert item is not None
     item_id = item["id"]
     response_get = get_item(item_id)
@@ -224,6 +234,6 @@ def test_integration_full_lifecycle():
     all_items = response_all.json()
     assert any(i["id"] == item_id for i in all_items)
     response_delete = delete_item(item_id)
-    assert response_delete == True
+    assert response_delete
     response_check = get_item(item_id)
     assert response_check.status_code == 404
