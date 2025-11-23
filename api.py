@@ -7,6 +7,7 @@ load_dotenv()
 BASE_URL = "https://qa-internship.avito.com"
 USERID = int(os.getenv("USERID"))
 
+
 def make_request(method: str, endpoint: str, **kwargs) -> requests.Response:
     url = f"{BASE_URL}/{endpoint.lstrip('/')}"
     headers = {"Content-Type": "application/json", "Accept": "application/json"}
@@ -14,6 +15,7 @@ def make_request(method: str, endpoint: str, **kwargs) -> requests.Response:
         headers.update(kwargs["headers"])
         del kwargs["headers"]
     return requests.request(method=method.upper(), url=url, headers=headers, **kwargs)
+
 
 def create_item(name: str, price: int, statistics: dict) -> dict:
     payload = {
@@ -30,14 +32,18 @@ def create_item(name: str, price: int, statistics: dict) -> dict:
             return {"id": item_id}
     return None
 
+
 def get_item(item_id: str) -> requests.Response:
     return make_request("GET", f"/api/1/item/{item_id}")
+
 
 def delete_item(item_id: str) -> bool:
     return make_request("DELETE", f"/api/2/item/{item_id}").status_code == 200
 
+
 def get_item_statistic(item_id: str) -> requests.Response:
     return make_request("GET", f"/api/1/statistic/{item_id}")
+
 
 def get_item_statistic_v2(item_id: str) -> requests.Response:
     return make_request("GET", f"/api/2/statistic/{item_id}")
