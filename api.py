@@ -11,9 +11,6 @@ USERID = int(os.getenv("USERID"))
 def make_request(method: str, endpoint: str, **kwargs) -> requests.Response:
     url = f"{BASE_URL}/{endpoint.lstrip('/')}"
     headers = {"Content-Type": "application/json", "Accept": "application/json"}
-    if "headers" in kwargs:
-        headers.update(kwargs["headers"])
-        del kwargs["headers"]
     return requests.request(method=method.upper(), url=url, headers=headers, **kwargs)
 
 
@@ -28,13 +25,17 @@ def create_item(name: str, price: int, statistics: dict) -> dict:
     if response.status_code == 200:
         result = response.json()
         if "status" in result and "Сохранили объявление - " in result["status"]:
-            item_id = result["status"].replace("Сохранили объявление - ", "")
+            item_id = result["status"].replace("Сохранили объявление - ", "") # Тут скорее всего бага, не должно с апи приходить json с "Сохранили в объявление -"
             return {"id": item_id}
     return None
 
 
 def get_item(item_id: str) -> requests.Response:
     return make_request("GET", f"/api/1/item/{item_id}")
+
+
+def get_all_items() -> requests.Response:
+    return make_request("GET", f"/api/1/{USERID}/item")
 
 
 def delete_item(item_id: str) -> bool:
