@@ -25,7 +25,7 @@ def create_item(name: str, price: int, statistics: dict) -> dict:
     if response.status_code == 200:
         result = response.json()
         if "status" in result and "Сохранили объявление - " in result["status"]:
-            item_id = result["status"].replace("Сохранили объявление - ", "") # Тут скорее всего бага, не должно с апи приходить json с "Сохранили в объявление -"
+            item_id = result["status"].replace("Сохранили объявление - ", "") # Тут скорее всего бага, не должно с апи приходить str "Сохранили в объявление -"
             return {"id": item_id}
     return None
 
