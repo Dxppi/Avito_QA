@@ -6,7 +6,7 @@
 
 **Клонирование репозитория**
 ```bash
-git clone <url-репозитория>
+git clone https://github.com/Dxppi/Avito_QA.git
 cd AVITO_QA
 ```
 **Создание виртуального окружения**
