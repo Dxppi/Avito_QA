@@ -7,7 +7,7 @@
 **Клонирование репозитория**
 ```bash
 git clone <url-репозитория>
-cd Avito_tests
+cd AVITO_QA
 ```
 **Создание виртуального окружения**
 ```bash
@@ -30,9 +30,9 @@ pip install -r requirements.txt
 ```
 
 **Настройка переменных окружения**
-Создайте .env файл.
+Создайте .env файл, по умолчанию 666321
 ```bash
-USERID=ваш_user_id
+USERID=ваш_user_id 
 ```
 
 ## Запуск тестов
